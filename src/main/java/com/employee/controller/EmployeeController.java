@@ -51,4 +51,9 @@ public class EmployeeController {
 	public List<Employee> getDistinctEmployees(@PathVariable String name) {
 		return service.getDistinctEmployees(name);
 	}
+	
+	@GetMapping("/hello")
+	public String hello() {
+		return "Hello";
+	}
 }
