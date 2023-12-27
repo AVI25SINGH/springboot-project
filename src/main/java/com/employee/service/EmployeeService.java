@@ -1,25 +1,27 @@
 package com.employee.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee.excveptions.UserNotFoundException;
 import com.employee.models.Employee;
 import com.employee.repo.EmployeeRepo;
 
 @Service
-public class EmployeeService implements ServiceInf{
+public class EmployeeService implements ServiceInf {
 
 	@Autowired
 	EmployeeRepo repo;
-	
+
 	@Override
 	public String savewEmployee(Employee employee) {
 		try {
 			repo.save(employee);
-			return "Employee details stored for id: "+employee.getId();
-		} catch(Exception e) {
+			return "Employee details stored for id: " + employee.getId();
+		} catch (Exception e) {
 			System.out.println(e);
 			return "Something went wrong!";
 		}
@@ -30,7 +32,7 @@ public class EmployeeService implements ServiceInf{
 		try {
 //			return repo.findAll();
 			return repo.fetchAllEmployees();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
@@ -38,26 +40,27 @@ public class EmployeeService implements ServiceInf{
 
 	@Override
 	public List<Employee> deleteEmployee(int id) {
-		try {
+
+		Optional<Employee> emp = repo.findById(id);
+		if (emp.isPresent()) {
 			repo.deleteById(id);
 			return repo.findAll();
-		} catch(Exception e) {
-			System.out.println(e);
-			return null;
+		} else {
+			throw new UserNotFoundException("Employee not found");
 		}
 	}
 
 	@Override
 	public Employee updateEmployee(Employee employee) {
 		try {
-			
+
 			Employee dbEmp = repo.getById(employee.getId());
 			employee.setCreatedDate(dbEmp.getCreatedDate());
-			
+
 			repo.save(employee);
 //			return repo.findById(employee.getId()).get();
 			return repo.getById(employee.getId());
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}

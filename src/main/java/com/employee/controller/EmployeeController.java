@@ -1,9 +1,13 @@
 package com.employee.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.employee.models.Employee;
 import com.employee.service.ServiceInf;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -23,7 +29,7 @@ public class EmployeeController {
 	ServiceInf service;
 
 	@PostMapping("/save")
-	public String saveEmployee(@RequestBody Employee employee) {
+	public String saveEmployee(@RequestBody @Valid Employee employee) {
 		return service.savewEmployee(employee);
 	}
 
@@ -38,7 +44,7 @@ public class EmployeeController {
 	}
 	
 	@PutMapping("/update")
-	public Employee updateEmployee(@RequestBody Employee employee) {
+	public Employee updateEmployee(@RequestBody @Valid Employee employee) {
 		return service.updateEmployee(employee);
 	}
 	
@@ -56,4 +62,16 @@ public class EmployeeController {
 	public String hello() {
 		return "Hello";
 	}
+	
+//	@ExceptionHandler(MethodArgumentNotValidException.class)
+//	public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+//		
+//		Map<String, String> errors = new HashMap<String, String>();
+//		
+//		ex.getBindingResult().getFieldErrors().forEach((error)->{
+//			errors.put(error.getField(), error.getDefaultMessage());
+//		});
+//
+//		return errors;
+//	}
 }
